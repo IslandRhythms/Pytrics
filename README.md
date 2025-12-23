@@ -58,10 +58,47 @@ For a one-time setup, you can use the provided setup script:
 
 ## Features
 
-- **Length conversions**: meters, kilometers, miles, feet, inches, yards, centimeters, millimeters
-- **Weight conversions**: kilograms, grams, pounds, ounces, tons, metric tons
-- **Temperature conversions**: Celsius, Fahrenheit, Kelvin
-- **Volume conversions**: liters, milliliters, gallons, quarts, pints, cups, fluid ounces
+- **Multiple Unit Categories**: Convert between units in four categories - length (meters, kilometers, miles, feet, inches, yards, centimeters, millimeters), weight (kilograms, grams, pounds, ounces, tons, metric tons), temperature (Celsius, Fahrenheit, Kelvin), and volume (liters, milliliters, gallons, quarts, pints, cups, fluid ounces). All conversions are handled with precision and support both large and small numbers using scientific notation.
+
+- **Dark/Light Mode**: Toggle between dark and light themes with a single click. The theme button is prominently displayed in the title bar for easy access.
+
+- **Custom Themes**: Create and load your own color palette from a JSON file. Define five main colors (primary, secondary, neutral, accent, and status) to personalize the application's appearance to match your preferences.
+
+- **Conversion History**: Automatically track all your conversions with timestamps. Each entry shows the input value, source unit, converted value, target unit, and optional label. History persists during your session and can be exported to CSV or TXT files.
+
+- **Labeled Conversions**: Add optional labels to your conversions for better organization. This makes it easy to identify and reference specific conversions later in your history.
+
+- **Export History**: Export your conversion history to CSV or TXT format for external use, documentation, or record-keeping purposes.
+
+## Custom Themes
+
+You can create your own custom theme by creating a JSON file with five color values:
+
+```json
+{
+  "primary": "#667eea",
+  "secondary": "#764ba2",
+  "neutral": "#4a5568",
+  "accent": "#48bb78",
+  "status": "#ffffff"
+}
+```
+
+**Color Definitions:**
+- **primary**: Main background gradient color (top)
+- **secondary**: Secondary background gradient color (bottom)
+- **neutral**: Neutral color for borders and text
+- **accent**: Accent color for buttons and highlights
+- **status**: Status/text color for labels
+
+To load a custom theme:
+1. Go to **Theme → Load Custom Theme...** in the menu bar
+2. Select your JSON theme file
+3. The theme will be applied immediately
+
+To reset to default: **Theme → Reset to Default**
+
+See `example_theme.json` for a template.
 
 ## Project Structure
 
@@ -69,7 +106,9 @@ For a one-time setup, you can use the provided setup script:
 Pytrics/
 ├── src/
 │   ├── main.py          # Main application GUI
-│   └── converter.py     # Unit conversion logic
+│   ├── converter.py     # Unit conversion logic
+│   └── theme.py         # Theme management
+├── example_theme.json   # Example custom theme file
 ├── requirements.txt     # Python dependencies
 ├── setup.bat           # Automated setup script (Windows)
 ├── activate.bat        # Activation helper (Windows)

@@ -1,5 +1,6 @@
 """Unit conversion logic for the Pytrics application."""
 
+import math
 from enum import Enum
 from typing import Dict
 
@@ -88,27 +89,85 @@ class UnitConverter:
     
     @staticmethod
     def convert_length(value: float, from_unit: LengthUnit, to_unit: LengthUnit) -> float:
-        """Convert length from one unit to another."""
+        """Convert length from one unit to another.
+        
+        Raises:
+            KeyError: If unit is missing from conversion dictionary
+            ZeroDivisionError: If conversion factor is zero
+            ValueError: If result is invalid (inf/nan)
+        """
         if from_unit == to_unit:
             return value
         
+        # Check if units exist in dictionary
+        if from_unit not in UnitConverter.LENGTH_TO_METERS:
+            raise KeyError(f"Conversion factor missing for length unit: {from_unit.name}")
+        if to_unit not in UnitConverter.LENGTH_TO_METERS:
+            raise KeyError(f"Conversion factor missing for length unit: {to_unit.name}")
+        
+        # Check for zero conversion factors
+        from_factor = UnitConverter.LENGTH_TO_METERS[from_unit]
+        to_factor = UnitConverter.LENGTH_TO_METERS[to_unit]
+        
+        if from_factor == 0.0:
+            raise ZeroDivisionError(f"Conversion factor for {from_unit.name} is zero")
+        if to_factor == 0.0:
+            raise ZeroDivisionError(f"Conversion factor for {to_unit.name} is zero")
+        
         # Convert to meters first, then to target unit
-        meters = value * UnitConverter.LENGTH_TO_METERS[from_unit]
-        return meters / UnitConverter.LENGTH_TO_METERS[to_unit]
+        meters = value * from_factor
+        result = meters / to_factor
+        
+        # Check for overflow/underflow
+        if math.isinf(result) or math.isnan(result):
+            raise ValueError(f"Conversion result is invalid (overflow/underflow): {result}")
+        
+        return result
     
     @staticmethod
     def convert_weight(value: float, from_unit: WeightUnit, to_unit: WeightUnit) -> float:
-        """Convert weight from one unit to another."""
+        """Convert weight from one unit to another.
+        
+        Raises:
+            KeyError: If unit is missing from conversion dictionary
+            ZeroDivisionError: If conversion factor is zero
+            ValueError: If result is invalid (inf/nan)
+        """
         if from_unit == to_unit:
             return value
         
+        # Check if units exist in dictionary
+        if from_unit not in UnitConverter.WEIGHT_TO_KILOGRAMS:
+            raise KeyError(f"Conversion factor missing for weight unit: {from_unit.name}")
+        if to_unit not in UnitConverter.WEIGHT_TO_KILOGRAMS:
+            raise KeyError(f"Conversion factor missing for weight unit: {to_unit.name}")
+        
+        # Check for zero conversion factors
+        from_factor = UnitConverter.WEIGHT_TO_KILOGRAMS[from_unit]
+        to_factor = UnitConverter.WEIGHT_TO_KILOGRAMS[to_unit]
+        
+        if from_factor == 0.0:
+            raise ZeroDivisionError(f"Conversion factor for {from_unit.name} is zero")
+        if to_factor == 0.0:
+            raise ZeroDivisionError(f"Conversion factor for {to_unit.name} is zero")
+        
         # Convert to kilograms first, then to target unit
-        kilograms = value * UnitConverter.WEIGHT_TO_KILOGRAMS[from_unit]
-        return kilograms / UnitConverter.WEIGHT_TO_KILOGRAMS[to_unit]
+        kilograms = value * from_factor
+        result = kilograms / to_factor
+        
+        # Check for overflow/underflow
+        if math.isinf(result) or math.isnan(result):
+            raise ValueError(f"Conversion result is invalid (overflow/underflow): {result}")
+        
+        return result
     
     @staticmethod
     def convert_temperature(value: float, from_unit: TemperatureUnit, to_unit: TemperatureUnit) -> float:
-        """Convert temperature from one unit to another."""
+        """Convert temperature from one unit to another.
+        
+        Raises:
+            ValueError: If result is invalid (inf/nan)
+        """
         if from_unit == to_unit:
             return value
         
@@ -124,21 +183,54 @@ class UnitConverter:
         
         # Convert from Celsius to target unit
         if to_unit == TemperatureUnit.CELSIUS:
-            return celsius
+            result = celsius
         elif to_unit == TemperatureUnit.FAHRENHEIT:
-            return (celsius * 9 / 5) + 32
+            result = (celsius * 9 / 5) + 32
         elif to_unit == TemperatureUnit.KELVIN:
-            return celsius + 273.15
+            result = celsius + 273.15
         else:
-            return celsius
+            result = celsius
+        
+        # Check for overflow/underflow
+        if math.isinf(result) or math.isnan(result):
+            raise ValueError(f"Temperature conversion result is invalid (overflow/underflow): {result}")
+        
+        return result
     
     @staticmethod
     def convert_volume(value: float, from_unit: VolumeUnit, to_unit: VolumeUnit) -> float:
-        """Convert volume from one unit to another."""
+        """Convert volume from one unit to another.
+        
+        Raises:
+            KeyError: If unit is missing from conversion dictionary
+            ZeroDivisionError: If conversion factor is zero
+            ValueError: If result is invalid (inf/nan)
+        """
         if from_unit == to_unit:
             return value
         
+        # Check if units exist in dictionary
+        if from_unit not in UnitConverter.VOLUME_TO_LITERS:
+            raise KeyError(f"Conversion factor missing for volume unit: {from_unit.name}")
+        if to_unit not in UnitConverter.VOLUME_TO_LITERS:
+            raise KeyError(f"Conversion factor missing for volume unit: {to_unit.name}")
+        
+        # Check for zero conversion factors
+        from_factor = UnitConverter.VOLUME_TO_LITERS[from_unit]
+        to_factor = UnitConverter.VOLUME_TO_LITERS[to_unit]
+        
+        if from_factor == 0.0:
+            raise ZeroDivisionError(f"Conversion factor for {from_unit.name} is zero")
+        if to_factor == 0.0:
+            raise ZeroDivisionError(f"Conversion factor for {to_unit.name} is zero")
+        
         # Convert to liters first, then to target unit
-        liters = value * UnitConverter.VOLUME_TO_LITERS[from_unit]
-        return liters / UnitConverter.VOLUME_TO_LITERS[to_unit]
+        liters = value * from_factor
+        result = liters / to_factor
+        
+        # Check for overflow/underflow
+        if math.isinf(result) or math.isnan(result):
+            raise ValueError(f"Conversion result is invalid (overflow/underflow): {result}")
+        
+        return result
 
